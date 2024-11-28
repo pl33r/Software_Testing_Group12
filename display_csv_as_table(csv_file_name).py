@@ -48,20 +48,33 @@ def test_display_csv_as_table_numeric_file_name(capsys):
     with pytest.raises(OSError):  # 应该抛出文件打开错误
         display_csv_as_table(csv_file_name=numeric_file_name)
 
-
-# 测试无效输入：无效类型
-@pytest.mark.parametrize("invalid_input", [123, 45.67, ["list"], None])
-def test_display_csv_as_table_invalid_input(invalid_input):
-    """
-    测试无效输入类型：int, float, list, None。
-    确保函数抛出 OSError 或其他合理错误。
-    """
-    with pytest.raises(Exception) as excinfo:  # 捕获所有异常，验证函数行为
+def test_display_csv_as_table_invalid_input_int():
+    """Test invalid input: Integer as file name"""
+    invalid_input = 123  # An integer instead of a string
+    with pytest.raises(TypeError, match="File name must be a string") as excinfo:
         display_csv_as_table(csv_file_name=invalid_input)
+    assert isinstance(excinfo.value, TypeError)
 
-    # 检查抛出的异常类型是否合理
-    assert isinstance(excinfo.value, (TypeError, OSError, ValueError)), \
-        f"Unexpected exception type: {type(excinfo.value)}"
+
+
+def test_display_csv_as_table_invalid_input_float():
+    """Test invalid input: Float as file name"""
+    invalid_input = 45.67  # A float instead of a string
+    with pytest.raises(TypeError, match="File name must be a string") as excinfo:
+        display_csv_as_table(csv_file_name=invalid_input)
+    assert isinstance(excinfo.value, TypeError)
+def test_display_csv_as_table_invalid_input_list():
+    """Test invalid input: List as file name"""
+    invalid_input = ["file1.csv", "file2.csv"]  # A list instead of a string
+    with pytest.raises(TypeError, match="File name must be a string") as excinfo:
+        display_csv_as_table(csv_file_name=invalid_input)
+    assert isinstance(excinfo.value, TypeError)
+def test_display_csv_as_table_invalid_input_none():
+    """Test invalid input: None as file name"""
+    invalid_input = None  # None instead of a string
+    with pytest.raises(TypeError, match="File name must be a string") as excinfo:
+        display_csv_as_table(csv_file_name=invalid_input)
+    assert isinstance(excinfo.value, TypeError)
 
 
 # 测试文件不存在的情况
