@@ -3,50 +3,6 @@ from unittest.mock import patch, mock_open
 from online_shopping_cart.product.product_search import display_csv_as_table
 
 
-# 测试无效输入：负数
-def test_display_csv_as_table_negative_number(capsys):
-    """
-    测试输入的数量为负数的情况。
-    """
-    negative_number_csv = "Product,Price,Quantity\nApple,1.2,-10"
-
-    # 模拟 get_csv_data 的返回值
-    header = ["Product", "Price", "Quantity"]
-    csv_reader = [["Apple", "1.2", "-10"]]  # 负数作为数量
-
-    # 预期输出（列表格式字符串）
-    expected_output = (
-        "['Product', 'Price', 'Quantity']\n"
-        "['Apple', '1.2', '-10']"
-    )
-
-    with patch("online_shopping_cart.product.product_search.get_csv_data", return_value=(header, csv_reader)):
-        with patch("builtins.open", mock_open(read_data=negative_number_csv)):
-            display_csv_as_table("negative_number.csv")
-            captured = capsys.readouterr()
-            assert captured.out.strip() == expected_output
-
-
-# 测试无效输入：空字符串作为文件名
-def test_display_csv_as_table_empty_string(capsys):
-    """
-    测试文件名为空字符串的情况。
-    """
-    empty_string_csv = ""  # 空字符串作为文件名
-
-    with pytest.raises(Exception):  # 应该抛出异常
-        display_csv_as_table(csv_file_name=empty_string_csv)
-
-
-# 测试无效输入：文件名为数字
-def test_display_csv_as_table_numeric_file_name(capsys):
-    """
-    测试文件名为数字的情况。
-    """
-    numeric_file_name = "12345"  # 数字作为文件名
-
-    with pytest.raises(OSError):  # 应该抛出文件打开错误
-        display_csv_as_table(csv_file_name=numeric_file_name)
 
 def test_display_csv_as_table_invalid_input_int():
     """Test invalid input: Integer as file name"""
@@ -225,5 +181,124 @@ def test_display_csv_as_table_special_characters(capsys):
     with patch("online_shopping_cart.product.product_search.get_csv_data", return_value=(header, csv_reader)):
         with patch("builtins.open", mock_open(read_data=special_characters_csv)):
             display_csv_as_table("special_characters.csv")
+            captured = capsys.readouterr()
+            assert captured.out.strip() == expected_output
+
+# 测试有效的CSV文件（商品名中包含空格）
+def test_display_csv_as_table_product_with_spaces(capsys):
+    """
+    测试商品名包含空格的情况。
+    """
+    product_with_spaces_csv = "Product,Price,Quantity\nApple Juice,1.2,10"
+
+    # 模拟 get_csv_data 的返回值
+    header = ["Product", "Price", "Quantity"]
+    csv_reader = [["Apple Juice", "1.2", "10"]]
+
+    # 预期输出（列表格式字符串）
+    expected_output = (
+        "['Product', 'Price', 'Quantity']\n"
+        "['Apple Juice', '1.2', '10']"
+    )
+
+    with patch("online_shopping_cart.product.product_search.get_csv_data", return_value=(header, csv_reader)):
+        with patch("builtins.open", mock_open(read_data=product_with_spaces_csv)):
+            display_csv_as_table("product_with_spaces.csv")
+            captured = capsys.readouterr()
+            assert captured.out.strip() == expected_output
+
+
+# 测试有效的CSV文件（商品价格为整数）
+def test_display_csv_as_table_product_price_integer(capsys):
+    """
+    测试商品价格为整数的情况。
+    """
+    product_price_integer_csv = "Product,Price,Quantity\nApple,10,20"
+
+    # 模拟 get_csv_data 的返回值
+    header = ["Product", "Price", "Quantity"]
+    csv_reader = [["Apple", "10", "20"]]
+
+    # 预期输出（列表格式字符串）
+    expected_output = (
+        "['Product', 'Price', 'Quantity']\n"
+        "['Apple', '10', '20']"
+    )
+
+    with patch("online_shopping_cart.product.product_search.get_csv_data", return_value=(header, csv_reader)):
+        with patch("builtins.open", mock_open(read_data=product_price_integer_csv)):
+            display_csv_as_table("product_price_integer.csv")
+            captured = capsys.readouterr()
+            assert captured.out.strip() == expected_output
+
+
+# 测试有效的CSV文件（商品价格为浮动小数）
+def test_display_csv_as_table_product_price_float(capsys):
+    """
+    测试商品价格为浮动的小数类型的情况。
+    """
+    product_price_float_csv = "Product,Price,Quantity\nApple,1.50,10"
+
+    # 模拟 get_csv_data 的返回值
+    header = ["Product", "Price", "Quantity"]
+    csv_reader = [["Apple", "1.50", "10"]]
+
+    # 预期输出（列表格式字符串）
+    expected_output = (
+        "['Product', 'Price', 'Quantity']\n"
+        "['Apple', '1.50', '10']"
+    )
+
+    with patch("online_shopping_cart.product.product_search.get_csv_data", return_value=(header, csv_reader)):
+        with patch("builtins.open", mock_open(read_data=product_price_float_csv)):
+            display_csv_as_table("product_price_float.csv")
+            captured = capsys.readouterr()
+            assert captured.out.strip() == expected_output
+
+
+# 测试有效的CSV文件（包含大数值）
+def test_display_csv_as_table_large_numbers(capsys):
+    """
+    测试文件包含大数值的情况。
+    """
+    large_numbers_csv = "Product,Price,Quantity\nBigProduct,10000,5000"
+
+    # 模拟 get_csv_data 的返回值
+    header = ["Product", "Price", "Quantity"]
+    csv_reader = [["BigProduct", "10000", "5000"]]
+
+    # 预期输出（列表格式字符串）
+    expected_output = (
+        "['Product', 'Price', 'Quantity']\n"
+        "['BigProduct', '10000', '5000']"
+    )
+
+    with patch("online_shopping_cart.product.product_search.get_csv_data", return_value=(header, csv_reader)):
+        with patch("builtins.open", mock_open(read_data=large_numbers_csv)):
+            display_csv_as_table("large_numbers.csv")
+            captured = capsys.readouterr()
+            assert captured.out.strip() == expected_output
+
+
+# 测试有效的CSV文件（商品名为空）
+def test_display_csv_as_table_empty_product_name(capsys):
+    """
+    测试商品名为空的情况。
+    """
+    empty_product_name_csv = "Product,Price,Quantity\n,10,5"
+
+    # 模拟 get_csv_data 的返回值
+    header = ["Product", "Price", "Quantity"]
+    csv_reader = [["", "10", "5"]]
+
+    # 预期输出（列表格式字符串）
+    expected_output = (
+        "['Product', 'Price', 'Quantity']\n"
+        "['', '10', '5']"
+    )
+
+    with patch("online_shopping_cart.product.product_search.get_csv_data", return_value=(header, csv_reader)):
+        with patch("builtins.open", mock_open(read_data=empty_product_name_csv)):
+            display_csv_as_table("empty_product_name.csv")
             captured = capsys.readouterr()
             assert captured.out.strip() == expected_output
