@@ -4,6 +4,7 @@ from online_shopping_cart.user.user_interface import UserInterface
 from online_shopping_cart.product.product import Product
 from online_shopping_cart.user.user_logout import logout
 from online_shopping_cart.user.user import User
+from online_shopping_cart.user.user_data import UserDataManager
 
 ############################
 # CHECKOUT PROCESS GLOBALS #
@@ -112,7 +113,13 @@ def checkout_and_payment(login_info) -> None:
             if check_cart(user=user, cart=global_cart) is False:
                 continue  # The user has selected not to check out their cart
             else:
-                pass  # TODO: Task 4: update the wallet information in the users.json file
+                # Update the wallet information in the users.json file
+                data = UserDataManager.load_users()
+                for entry in data:
+                    if entry['username'].lower() == user.name.lower():
+                        entry['wallet'] = int(user.wallet)
+                        UserDataManager.save_users(data=data)
+                        break
         elif choice.startswith('l'):
             if logout(cart=global_cart):
                 exit(0)  # The user has logged out

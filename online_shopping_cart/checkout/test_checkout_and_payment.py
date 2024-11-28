@@ -60,12 +60,12 @@ def check_cart_stub3(mocker):
 
 @pytest.fixture
 def load_users_stub1(login_info, mocker):
-    return mocker.patch('online_shopping_cart.user.user_data.UserDataManager.load_users', return_value=[login_info])
+    return mocker.patch('online_shopping_cart.checkout.checkout_process.UserDataManager.load_users', return_value=[login_info])
 
 
 @pytest.fixture
 def save_users_stub1(mocker):
-    return mocker.patch('online_shopping_cart.user.user_data.UserDataManager.save_users', return_value=None)
+    return mocker.patch('online_shopping_cart.checkout.checkout_process.UserDataManager.save_users', return_value=None)
 
 
 @pytest.fixture
@@ -179,7 +179,7 @@ def test_float_input(invalid_input_type):
 def test_string_input(invalid_input_type):
     with pytest.raises(TypeError) as excinfo:
         checkout_and_payment(invalid_input_type['string'])
-    assert "string indices must be integers" in str(excinfo.value)
+    assert "string indices must be integers, not 'str'" in str(excinfo.value)
 
 
 def test_list_input(invalid_input_type):
@@ -282,7 +282,10 @@ def test_EC3_TC1(login_info, global_products_stub1, global_cart_stub1, user_stub
     logout_stub1.assert_called_once_with(cart=global_cart_stub1)
     # Assert that the check_cart function was called with the correct arguments
     check_cart_stub1.assert_called_once_with(user=user_stub1.return_value, cart=global_cart_stub1)
+    # Assert that the load_users function was called once
+    load_users_stub1.assert_called_once()
     # Assert that the save_users function was called with the correct arguments
+    save_users_stub1.assert_called_once_with(data=load_users_stub1.return_value)
     assert capsys.readouterr().out.strip() == ''
 
 
@@ -294,6 +297,8 @@ def test_EC3_TC2(login_info, global_products_stub1, global_cart_stub1, user_stub
     global_products_stub1[0].get_product_unit.assert_called_once()
     global_cart_stub1.add_item.assert_called_once_with(product=global_products_stub1[0].get_product_unit.return_value)
     check_cart_stub1.assert_called_once_with(user=user_stub1.return_value, cart=global_cart_stub1)
+    load_users_stub1.assert_called_once()
+    save_users_stub1.assert_called_once_with(data=load_users_stub1.return_value)
     assert capsys.readouterr().out.strip() == f'{global_products_stub1[0].name} added to your cart.'
 
 
@@ -306,6 +311,8 @@ def test_EC3_TC3(login_info, global_products_stub1, global_cart_stub1, user_stub
     assert global_cart_stub1.add_item.call_count == 2
     global_cart_stub1.add_item.assert_has_calls(2 * [mocker.call(product=global_products_stub1[0].get_product_unit.return_value)])
     check_cart_stub1.assert_called_once_with(user=user_stub1.return_value, cart=global_cart_stub1)
+    load_users_stub1.assert_called_once()
+    save_users_stub1.assert_called_once_with(data=load_users_stub1.return_value)
     assert capsys.readouterr().out.strip() == f'{global_products_stub1[0].name} added to your cart.\n{global_products_stub1[0].name} added to your cart.'
 
 
@@ -360,6 +367,8 @@ def test_EC3_TC7(login_info, global_products_stub1, global_cart_stub1, user_stub
     global_cart_stub1.add_item.assert_has_calls(2 * [mocker.call(product=global_products_stub1[0].get_product_unit.return_value)])
     assert check_cart_stub3.call_count == 2
     check_cart_stub3.assert_has_calls(2 *[mocker.call(user=user_stub1.return_value, cart=global_cart_stub1)])
+    load_users_stub1.assert_called_once()
+    save_users_stub1.assert_called_once_with(data=load_users_stub1.return_value)
     assert capsys.readouterr().out.strip() == f'{global_products_stub1[0].name} added to your cart.\n{global_products_stub1[0].name} added to your cart.'
 
 
@@ -381,6 +390,8 @@ def test_EC4_TC2(login_info, global_products_stub1, global_cart_stub1, user_stub
     global_products_stub1[0].get_product_unit.assert_called_once()
     global_cart_stub1.add_item.assert_called_once_with(product=global_products_stub1[0].get_product_unit.return_value)
     check_cart_stub1.assert_called_once_with(user=user_stub1.return_value, cart=global_cart_stub1)
+    load_users_stub1.assert_called_once()
+    save_users_stub1.assert_called_once_with(data=load_users_stub1.return_value)
     assert capsys.readouterr().out.strip() == f'{global_products_stub1[0].name} added to your cart.'
 
 
