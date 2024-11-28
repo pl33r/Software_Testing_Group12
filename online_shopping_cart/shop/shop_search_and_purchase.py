@@ -1,4 +1,3 @@
-
 from online_shopping_cart.product.product_search import display_csv_as_table, display_filtered_table
 from online_shopping_cart.checkout.checkout_process import checkout_and_payment
 from online_shopping_cart.user.user_interface import UserInterface

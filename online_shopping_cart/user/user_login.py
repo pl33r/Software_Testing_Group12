@@ -1,4 +1,3 @@
-
 from online_shopping_cart.user.user_authentication import UserAuthenticator, PasswordValidator
 from online_shopping_cart.user.user_interface import UserInterface
 from online_shopping_cart.user.user_data import UserDataManager

@@ -27,6 +27,8 @@ def get_products(file_name=PRODUCTS_FILE_PATHNAME) -> list[Product]:
     """
     Load products from a CSV file
     """
+    if not isinstance(file_name, str):
+        raise TypeError("File name must be a string")
     products: list[Product] = []
     for row in get_csv_data(csv_file_name=file_name, is_dict=True):
         products.append(Product(
@@ -34,4 +36,4 @@ def get_products(file_name=PRODUCTS_FILE_PATHNAME) -> list[Product]:
             price=float(row['Price']),
             units=int(row['Units'])
         ))
-    return product
+    return products
