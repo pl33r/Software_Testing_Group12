@@ -1,0 +1,28 @@
+input domain modelling for login()
+Inputs
+Username: Provided by the user.
+Password: Provided by the user.
+Equivalence Classes
+Valid Inputs:
+Username: A string with valid characters, already registered in the users.json file.
+Password: A string matching the registered password for the username.
+
+Invalid Inputs:
+Invalid Username Types: Non-string values such as integers, floats, or lists.
+Invalid Password Types: Same as username types.
+Non-existent Username: Strings that do not exist in users.json.
+Incorrect Password: Strings that do not match the stored password for the username.
+
+
+input domain modelling for logout()
+Inputs
+Cart: A data structure representing the shopping cart.
+
+Equivalence Classes
+
+Valid Inputs:
+Empty Cart: A cart with no items.
+Non-Empty Cart: A cart containing Product objects.
+
+Invalid Inputs:
+Invalid Cart Types: Non-cart objects values such as integers, floats, or lists.
