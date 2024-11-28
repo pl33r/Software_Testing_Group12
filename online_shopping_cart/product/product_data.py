@@ -34,4 +34,4 @@ def get_products(file_name=PRODUCTS_FILE_PATHNAME) -> list[Product]:
             price=float(row['Price']),
             units=int(row['Units'])
         ))
-    return products
+    return product
