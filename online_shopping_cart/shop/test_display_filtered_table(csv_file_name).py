@@ -4,12 +4,14 @@ from online_shopping_cart.product.product_search import display_filtered_table
 
 
 def test_valid_csv_file_name_string(capsys):
+    # Sample CSV data with headers and some products
     header = ["Product", "Price", "Quantity"]
     csv_reader = [
         ["Apple", "1.2", "10"],
         ["Banana", "0.5", "20"],
         ["Orange", "0.8", "15"]
     ]
+    # Mocking get_csv_data to return our sample data
     with patch("online_shopping_cart.product.product_search.get_csv_data", return_value=(header, csv_reader)):
         display_filtered_table(csv_file_name="products.csv", search_target=None)
         captured = capsys.readouterr()
@@ -22,12 +24,14 @@ def test_valid_csv_file_name_string(capsys):
     assert captured.out.strip() == expected_output
 
 def test_display_filtered_table_with_valid_search(capsys):
+    # Sample CSV data with headers and some products
     header = ["Product", "Price", "Quantity"]
     csv_reader = [
         ["Apple", "1.2", "10"],
         ["Banana", "0.5", "20"],
         ["Orange", "0.8", "15"]
     ]
+    # Mocking get_csv_data to return our sample data
     with patch("online_shopping_cart.product.product_search.get_csv_data", return_value=(header, csv_reader)):
         display_filtered_table(csv_file_name="products.csv", search_target="Banana")
         captured = capsys.readouterr()
@@ -38,12 +42,14 @@ def test_display_filtered_table_with_valid_search(capsys):
     assert captured.out.strip() == expected_output
 
 def test_display_filtered_table_with_empty_search(capsys):
+    # Sample CSV data with headers and some products
     header = ["Product", "Price", "Quantity"]
     csv_reader = [
         ["Apple", "1.2", "10"],
         ["Banana", "0.5", "20"],
         ["Orange", "0.8", "15"]
     ]
+    # Mocking get_csv_data to return our sample data
     with patch("online_shopping_cart.product.product_search.get_csv_data", return_value=(header, csv_reader)):
         display_filtered_table(csv_file_name="products.csv", search_target="")
         captured = capsys.readouterr()
@@ -53,10 +59,12 @@ def test_display_filtered_table_with_empty_search(capsys):
     assert captured.out.strip() == expected_output
 
 def test_display_filtered_table_single_product(capsys):
+    # Sample CSV data with a single product
     header = ["Product", "Price", "Quantity"]
     csv_reader = [
         ["Apple", "1.2", "10"]
     ]
+    # Mocking get_csv_data to return our sample data
     with patch("online_shopping_cart.product.product_search.get_csv_data", return_value=(header, csv_reader)):
         display_filtered_table(csv_file_name="products.csv", search_target=None)
         captured = capsys.readouterr()
@@ -67,12 +75,14 @@ def test_display_filtered_table_single_product(capsys):
     assert captured.out.strip() == expected_output
 
 def test_display_filtered_table_same_product_name(capsys):
+    # Sample CSV data with the same product name but different prices/quantities
     header = ["Product", "Price", "Quantity"]
     csv_reader = [
         ["Apple", "1.2", "10"],
         ["Apple", "0.5", "20"],
         ["Apple", "0.8", "15"]
     ]
+    # Mocking get_csv_data to return our sample data
     with patch("online_shopping_cart.product.product_search.get_csv_data", return_value=(header, csv_reader)):
         display_filtered_table(csv_file_name="products.csv", search_target="Apple")
         captured = capsys.readouterr()
@@ -85,12 +95,14 @@ def test_display_filtered_table_same_product_name(capsys):
     assert captured.out.strip() == expected_output
 
 def test_display_filtered_table_special_characters(capsys):
+    # Sample CSV data with special characters in the product names
     header = ["Product", "Price", "Quantity"]
     csv_reader = [
         ["Apple@2021", "1.2", "10"],
         ["Banana$special", "0.5", "20"],
         ["Orange&fresh", "0.8", "15"]
     ]
+    # Mocking get_csv_data to return our sample data
     with patch("online_shopping_cart.product.product_search.get_csv_data", return_value=(header, csv_reader)):
         display_filtered_table(csv_file_name="products.csv", search_target=None)
         captured = capsys.readouterr()
@@ -103,9 +115,9 @@ def test_display_filtered_table_special_characters(capsys):
     assert captured.out.strip() == expected_output
 
 
-# 测试没有搜索目标时，应该显示所有的产品数据
+# Test when no search target is provided, all product data should be shown
 def test_display_filtered_table_no_search_target(capsys):
-    # 假设的 CSV 数据
+    # Sample CSV data with headers and some products
     header = ["Product", "Price", "Quantity"]
     csv_reader = [
         ["Apple", "1.2", "10"],
@@ -113,15 +125,15 @@ def test_display_filtered_table_no_search_target(capsys):
         ["Orange", "0.8", "15"]
     ]
 
-    # 模拟 get_csv_data 返回的值
+    # Mocking get_csv_data to return our sample data
     with patch("online_shopping_cart.product.product_search.get_csv_data", return_value=(header, csv_reader)):
-        # 调用 display_filtered_table，没有提供 search_target
+        # Calling display_filtered_table without providing a search target
         display_filtered_table(csv_file_name="products.csv", search_target=None)
 
-        # 捕获输出
+        # Capturing the output
         captured = capsys.readouterr()
 
-    # 预期输出包含所有产品
+    # Expected output should include all products
     expected_output = "['Product', 'Price', 'Quantity']\n" \
                       "['Apple', '1.2', '10']\n" \
                       "['Banana', '0.5', '20']\n" \
@@ -130,9 +142,9 @@ def test_display_filtered_table_no_search_target(capsys):
     assert captured.out.strip() == expected_output
 
 
-# 测试提供搜索目标时，应该只显示匹配的产品
+# Test when a search target is provided, only matching products should be displayed
 def test_display_filtered_table_with_search_target(capsys):
-    # 假设的 CSV 数据
+    # Sample CSV data with headers and some products
     header = ["Product", "Price", "Quantity"]
     csv_reader = [
         ["Apple", "1.2", "10"],
@@ -140,24 +152,24 @@ def test_display_filtered_table_with_search_target(capsys):
         ["Orange", "0.8", "15"]
     ]
 
-    # 模拟 get_csv_data 返回的值
+    # Mocking get_csv_data to return our sample data
     with patch("online_shopping_cart.product.product_search.get_csv_data", return_value=(header, csv_reader)):
-        # 调用 display_filtered_table，搜索 "Apple"
+        # Calling display_filtered_table, searching for "Apple"
         display_filtered_table(csv_file_name="products.csv", search_target="Apple")
 
-        # 捕获输出
+        # Capturing the output
         captured = capsys.readouterr()
 
-    # 预期输出只包含 "Apple" 产品
+    # Expected output should only include the "Apple" product
     expected_output = "['Product', 'Price', 'Quantity']\n" \
                       "['Apple', '1.2', '10']"
 
     assert captured.out.strip() == expected_output
 
 
-# 测试搜索目标与任何产品都不匹配时，应该不显示任何产品
+# Test when no product matches the search target, nothing should be displayed
 def test_display_filtered_table_no_match(capsys):
-    # 假设的 CSV 数据
+    # Sample CSV data with headers and some products
     header = ["Product", "Price", "Quantity"]
     csv_reader = [
         ["Apple", "1.2", "10"],
@@ -165,26 +177,24 @@ def test_display_filtered_table_no_match(capsys):
         ["Orange", "0.8", "15"]
     ]
 
-    # 模拟 get_csv_data 返回的值
+    # Mocking get_csv_data to return our sample data
     with patch("online_shopping_cart.product.product_search.get_csv_data", return_value=(header, csv_reader)):
-        # 调用 display_filtered_table，搜索 "Pineapple"（没有匹配的产品）
+        # Calling display_filtered_table, searching for "Pineapple" (no matching product)
         display_filtered_table(csv_file_name="products.csv", search_target="Pineapple")
 
-        # 捕获输出
+        # Capturing the output
         captured = capsys.readouterr()
 
-    # 预期输出应该只包含表头，不会有任何产品数据
+    # Expected output should only include the header, no product data
     expected_output = "['Product', 'Price', 'Quantity']"
 
-    # 通过去除尾部的换行符来比较
-    # 用strip来去掉多余的空格/换行符
+    # Stripping to remove trailing newlines and comparing
     assert captured.out.strip().splitlines()[0] == expected_output
 
 
-
-# 测试大小写不敏感的匹配，应该返回匹配的产品
+# Test case-insensitive matching, it should return the matching products
 def test_display_filtered_table_case_insensitive(capsys):
-    # 假设的 CSV 数据
+    # Sample CSV data with headers and some products
     header = ["Product", "Price", "Quantity"]
     csv_reader = [
         ["Apple", "1.2", "10"],
@@ -192,44 +202,46 @@ def test_display_filtered_table_case_insensitive(capsys):
         ["Orange", "0.8", "15"]
     ]
 
-    # 模拟 get_csv_data 返回的值
+    # Mocking get_csv_data to return our sample data
     with patch("online_shopping_cart.product.product_search.get_csv_data", return_value=(header, csv_reader)):
-        # 调用 display_filtered_table，搜索 "apple"（忽略大小写）
+        # Calling display_filtered_table, searching for "apple" (case-insensitive)
         display_filtered_table(csv_file_name="products.csv", search_target="apple")
 
-        # 捕获输出
+        # Capturing the output
         captured = capsys.readouterr()
 
-    # 预期输出应该包含 "Apple" 产品（忽略大小写）
+    # Expected output should include the "Apple" product (case-insensitive)
     expected_output = "['Product', 'Price', 'Quantity']\n" \
                       "['Apple', '1.2', '10']"
 
     assert captured.out.strip() == expected_output
 
 
-    # 无效输入测试：无效的csv_file_name（整数类型）
-
-
-# 无效输入测试：无效的csv_file_name（整数类型）
+# Test invalid input: Invalid csv_file_name (integer type)
 def test_invalid_csv_file_name_int(capsys):
-    # 使用 pytest.raises 捕获 OSError 异常，使用正则表达式匹配错误信息
+    # Using pytest.raises to capture OSError exception with a regex pattern for the error message
     with pytest.raises(OSError, match=r'.*\[WinError 6\].*'):
         display_filtered_table(csv_file_name=123, search_target=None)
 
-# 无效输入测试：无效的csv_file_name（浮动类型）
+# Test invalid input: Invalid csv_file_name (float type)
 def test_invalid_csv_file_name_float(capsys):
-    # 使用 pytest.raises 捕获 TypeError 异常，使用正则表达式匹配错误信息
+    # Using pytest.raises to capture TypeError exception with a regex pattern for the error message
     with pytest.raises(TypeError, match=r'.*expected str, bytes or os.PathLike object, not float.*'):
         display_filtered_table(csv_file_name=12.34, search_target=None)
 
 
 def test_invalid_csv_file_name_list(capsys):
-    # 使用 pytest.raises 捕获 TypeError 异常，使用正则表达式匹配错误信息
+    # Using pytest.raises to capture TypeError exception with a regex pattern for the error message
     with pytest.raises(TypeError, match=r'.*expected str, bytes or os.PathLike object, not list.*'):
         display_filtered_table(csv_file_name=['invalid', 'list'], search_target=None)
 
 
 def test_invalid_csv_file_name_string(capsys):
-    # 模拟一个无效的文件路径，应该抛出 FileNotFoundError
+    # Simulating an invalid file path, which should raise a FileNotFoundError
     with pytest.raises(FileNotFoundError, match=r'.*No such file or directory.*'):
         display_filtered_table(csv_file_name="invalid_path.csv", search_target=None)
+
+def test_invalid_csv_file_name_int(capsys):
+    """Test invalid input: Integer as file name"""
+    with pytest.raises(OSError, match=r'.*\[WinError 6\].*'):
+        display_filtered_table(csv_file_name=123, search_target=None)
