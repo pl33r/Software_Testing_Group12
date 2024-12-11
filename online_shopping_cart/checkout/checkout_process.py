@@ -31,13 +31,38 @@ def checkout(user, cart) -> None:
         return
 
     total_price: float = cart.get_total_price()
-    if total_price > user.wallet:
-        print(f"You don't have enough money to complete the purchase. Please try again!")
-        return
-    user.wallet -= total_price  # Deduct the total price from the user's wallet
+    # Ask the user whether he wants to use his wallet or a credit card
+    while True:
+        user_input: str = UserInterface.get_user_input(
+            prompt='\nDo you want to pay with your wallet or credit card (w for wallet, c for credit card): '
+        ).lower()
+        if user_input.startswith('w'):
+            if total_price > user.wallet:
+                print(f"You don't have enough money to complete the purchase. Please try again!")
+                return
+            user.wallet -= total_price  # Deduct the total price from the user's wallet
+            print(f'Thank you for your purchase, {user.name}! Your remaining balance is {user.wallet}')
+        elif user_input.startswith('c'):
+            if len(user.cards) > 0:
+                # Display the list of the user's credit cards
+                print('\nYour credit cards:')
+                for i, card in enumerate(user.cards):
+                    print(f'{i + 1}. {str(card)}')
+                # Ask which credit card the user wants to use for payment
+                while True:
+                    choice: str = UserInterface.get_user_input(prompt='\nEnter the credit card index: ').lower()
+                    if choice.isdigit() and 1 <= int(choice) <= len(user.cards):
+                        print(f'Thank you for your purchase, {user.name}!')
+                        break
+                    else:
+                        print('Invalid input. Please try again.')
+                break
+            else:
+                print('You have no registered credit card. Please try again!')
+                return
+        else:
+            print('Invalid input. Please try again.')
     cart.clear_items()  # Clear the cart
-
-    print(f'Thank you for your purchase, {user.name}! Your remaining balance is {user.wallet}')
 
 
 def display_cart_items(cart) -> None:
@@ -99,7 +124,8 @@ def checkout_and_payment(login_info) -> None:
 
     user: User = User(
         name=login_info['username'],
-        wallet=login_info['wallet']
+        wallet=login_info['wallet'],
+        cards=login_info['cards']
     )
 
     # Get user input for either selecting a product by its number, checking their cart or logging out

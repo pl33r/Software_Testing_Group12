@@ -2,7 +2,7 @@
 # USER AUTHENTICATION CLASSES #
 ###############################
 from online_shopping_cart.user.user_data import UserDataManager
-#everything new in this file was done by Julius Amorim according to the instructions given in the assignment 1 task 1
+
 
 class PasswordValidator:
 
@@ -30,9 +30,14 @@ class UserAuthenticator:
             if is_user_registered:
                 if entry['password'].lower() == password.lower():
                     print('Successfully logged in.')
+                    try:
+                        cards = entry['cards']
+                    except KeyError:
+                        cards = list()
                     return {
                         'username': entry['username'],
-                        'wallet': entry['wallet']
+                        'wallet': entry['wallet'],
+                        'cards': cards
                     }
                 break
 
@@ -43,8 +48,8 @@ class UserAuthenticator:
         return None
 
     @staticmethod
-    def register(username, password, data) -> None:
-        new_reg={"username":username,"password":password ,"wallet":0.0}
-        data.append(new_reg) 
+    def register(username, password, cards, data) -> None:
+        new_reg={"username":username,"password":password ,"wallet":0.0, "cards":cards}
+        data.append(new_reg)
         UserDataManager.save_users(data)
         print("User registered successfully.")

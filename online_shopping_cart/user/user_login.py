@@ -6,8 +6,6 @@ from online_shopping_cart.user.user_data import UserDataManager
 ########################
 
 
-#everything new in this file was done by Julius Amorim according to the instructions given in the assignment 1 task 1
-
 def is_quit(input_argument: str) -> bool:
     return input_argument.lower() == 'q'
 
@@ -37,7 +35,27 @@ def login() -> dict[str, str | float] | None:
             while not PasswordValidator.is_valid(password):
                 print("Password does not meet the criteria. Try again.")
                 password = UserInterface.get_user_input(prompt="Create a password (at least 8 characters, 1 uppercase, 1 special): ")
-            UserAuthenticator.register(username, password, UserDataManager.load_users())
+            cards = list()
+            # Iteratively ask the user if they want to add a credit card to their account
+            while True:
+                card_option: str = UserInterface.get_user_input(
+                    prompt="Would you like to add a credit card ('yes' or 'no'): ").lower()
+                if card_option == 'yes':
+                    number = UserInterface.get_user_input(
+                        prompt="Enter the credit card number: ")
+                    date_of_expiry = UserInterface.get_user_input(
+                        prompt="Enter the date of expiry: ")
+                    name = UserInterface.get_user_input(
+                        prompt="Enter the name on the credit card: ")
+                    cvv = UserInterface.get_user_input(
+                        prompt="Enter the CVV on the credit card: ")
+                    cards.append({"number": number, "date_of_expiry": date_of_expiry, "name": name, "cvv": cvv})
+                    print('Successfully added credit card.')
+                elif card_option == 'no':
+                    break
+                else:
+                    print("Invalid input. Please enter 'yes' or 'no'.")
+            UserAuthenticator.register(username, password, cards, UserDataManager.load_users())
             break
         elif register_option == 'no':
             break
